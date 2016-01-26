@@ -1,4 +1,6 @@
 # Lab1 CMC-CS181
+## January 26, 2016
+## Kevin Cunanan
 
 To compile this file simply run `python lab1.py filename.txt`.
 * lab1.py uses Python 2.7.10
