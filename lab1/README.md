@@ -3,8 +3,8 @@
 ## Kevin Cunanan
 
 ### ENTROPY RESULTS:
-* lab1_data.txt: **4.54642316023**
-* random_data.txt: **6.99813170948**
+* lab1_data.txt: **4.54714420196**
+* random_data.txt: **8.18316466797**
 
 To compile this file simply run `python lab1.py filename.txt`.
 * lab1.py uses Python 2.7.10
