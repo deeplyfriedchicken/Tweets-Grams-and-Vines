@@ -36,7 +36,7 @@ def LZ77_search(search, look_ahead):
 
 def main():
     print "Hi"
-    MAX_SEARCH = 1024
+    MAX_SEARCH = 1023
     MAX_LOOKAHEAD = 63
     inputme = "Note that bits are counted from right to left starting at 0; bit 8 is the last bit of the \x4c byte, bit 21 through 16 are the last right-most 5 bits of the first byte. Your shift by 3 implies that you are counting bits from left to right; perhaps you are looking for a different set of bits from the convention?"
     search_idx = 0
@@ -45,8 +45,6 @@ def main():
     lookahead = inputme[lookahead_idx:lookahead_idx+MAX_LOOKAHEAD]
     f = open('compressed.bin', 'wb')
     while len(lookahead) != 0:
-        print search
-        print lookahead
         (offset, length, char) = LZ77_search(search, lookahead)
         lookahead_idx += length + 1
         shifted_offset = offset << 6

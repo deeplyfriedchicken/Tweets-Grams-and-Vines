@@ -5,8 +5,11 @@ byte = f.read(2)
 count = 1
 while byte != "":
     offset_and_length = unpack(">H", byte)
-    print offset_and_length
+    offset = offset_and_length[0] >> 6
+    length = offset_and_length[0] - (offset << 6)
+    print "Length "+str(length)
+    print "Offset "+str(offset)
     char = f.read(1)
-    print char
+    print "Char "+str(char)
     byte = f.read(2)
     count += 1
