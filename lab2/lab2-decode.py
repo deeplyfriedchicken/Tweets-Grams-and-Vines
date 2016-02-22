@@ -3,13 +3,22 @@ from struct import *
 f = open("compressed.bin" ,"rb")
 byte = f.read(2)
 count = 1
+buf = []
 while byte != "":
     offset_and_length = unpack(">H", byte)
     offset = offset_and_length[0] >> 6
     length = offset_and_length[0] - (offset << 6)
+    char = f.read(1)
     print "Length "+str(length)
     print "Offset "+str(offset)
-    char = f.read(1)
-    print "Char "+str(char)
+    count = 0
+    while length >= 0:
+        if length == 0:
+            buf.append(char)
+        else:
+            buf.append(buf[offset + count])
+        count += 1
+        length = length - 1
     byte = f.read(2)
     count += 1
+print buf

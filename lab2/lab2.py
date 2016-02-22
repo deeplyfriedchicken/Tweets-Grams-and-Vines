@@ -35,10 +35,9 @@ def LZ77_search(search, look_ahead):
     return(best_offset, best_length, buf[search_pointer+best_length])
 
 def main():
-    print "Hi"
     MAX_SEARCH = 1023
     MAX_LOOKAHEAD = 63
-    inputme = "Note that bits are counted from right to left starting at 0; bit 8 is the last bit of the \x4c byte, bit 21 through 16 are the last right-most 5 bits of the first byte. Your shift by 3 implies that you are counting bits from left to right; perhaps you are looking for a different set of bits from the convention?"
+    inputme = "MPC is looking for interns who are familiar with social media R&D and marketing, as well as web design and operations. Assignments can be carried out at the MPC office in Santa Monica and, in certain situations, virtually."
     search_idx = 0
     lookahead_idx = 0
     search = inputme[search_idx:lookahead_idx]
