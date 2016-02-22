@@ -1,6 +1,8 @@
 from struct import *
+import sys
 
-f = open("compressed.bin" ,"rb")
+f = open(str(sys.argv[1]) ,"rb")
+w = open(str('uncompressed.bin'), "wb")
 byte = f.read(2)
 count = 1
 buf = []
@@ -15,8 +17,10 @@ while byte != "":
     while length >= 0:
         if length == 0:
             buf.append(char)
+            w.write(char)
         else:
             buf.append(buf[offset + count])
+            w.write(char)
         count += 1
         length = length - 1
     byte = f.read(2)
