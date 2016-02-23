@@ -1,3 +1,5 @@
+# Kevin Cunanan
+# decompress
 from struct import *
 import sys
 
