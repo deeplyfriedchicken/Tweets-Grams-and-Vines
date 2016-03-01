@@ -15,16 +15,12 @@ while byte != "":
     char = f.read(1)
     print "Length "+str(length)
     print "Offset "+str(offset)
-    count = 0
-    while length >= 0:
-        if length == 0:
-            buf.append(char)
-            w.write(char)
-        else:
-            buf.append(buf[offset + count])
-            w.write(char)
-        count += 1
-        length = length - 1
+    if length == 0:
+        buf.append(char)
+    else:
+        for i in range (0, length+1):
+            buf.append(buf[i+offset])
     byte = f.read(2)
-    count += 1
 print buf
+for i in range (0,len(buf)):
+    w.write(buf[i])

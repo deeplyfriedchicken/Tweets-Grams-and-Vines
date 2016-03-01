@@ -55,8 +55,9 @@ def main():
         f.write(ol_bytes)
         f.write(char)
         print "<"+str(offset)+","+str(length)+","+str(char)+">"
-        inputme = inputme + r.read(1)
-        search_idx += 1
+        inputme = inputme + r.read(length)
+        if len(search) >= MAX_SEARCH:
+            search_idx = lookahead_idx - MAX_SEARCH
         search = inputme[search_idx:lookahead_idx]
         lookahead = inputme[lookahead_idx:lookahead_idx+MAX_LOOKAHEAD]
     f.close
