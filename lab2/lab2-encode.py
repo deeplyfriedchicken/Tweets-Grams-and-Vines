@@ -36,8 +36,8 @@ def LZ77_search(search, look_ahead):
     return(best_offset, best_length, buf[search_pointer+best_length])
 
 def main():
-    MAX_SEARCH = 1023
-    MAX_LOOKAHEAD = 63
+    MAX_SEARCH = 1024
+    MAX_LOOKAHEAD = 64
     r = open(str(sys.argv[1]) ,"rb")
     inputme = r.read(MAX_SEARCH+MAX_LOOKAHEAD)
     search_idx = 0
@@ -49,14 +49,13 @@ def main():
         (offset, length, char) = LZ77_search(search, lookahead)
         lookahead_idx += length + 1
         shifted_offset = offset << 6
-        print offset
         offset_and_length = shifted_offset + length
         ol_bytes = pack('>H', offset_and_length)
         f.write(ol_bytes)
         f.write(char)
         print "<"+str(offset)+","+str(length)+","+str(char)+">"
-        inputme = inputme + r.read(length)
-        if len(search) >= MAX_SEARCH:
+        inputme = inputme + r.read(length+1)
+        if (lookahead_idx - search_idx) > MAX_SEARCH:
             search_idx = lookahead_idx - MAX_SEARCH
         search = inputme[search_idx:lookahead_idx]
         lookahead = inputme[lookahead_idx:lookahead_idx+MAX_LOOKAHEAD]
