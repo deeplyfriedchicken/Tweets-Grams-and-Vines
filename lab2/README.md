@@ -32,12 +32,15 @@ File Size is compared to 46K.
 ### 256
 * Speed: Fast
 * File size: 127K
+
 ### 512
 * Speed: Slightly slower, no difference on decode
 * File size: 110K
+
 ### 2048
 * Speed: Significantly slower on compression, still just as fast as 256 on decompression
 * File size: 86K
+
 ### 4096
 * Speed: Around 10 seconds, definitely slower than 2048
 * File size: 78K
