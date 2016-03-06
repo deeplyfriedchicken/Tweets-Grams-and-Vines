@@ -44,6 +44,9 @@ def main():
     code = []
     huff(tree, "", code)
     huffman = dict(code)
-    print len(huffman)
+    for key, value in huffman.iteritems():
+        if len(str(key)) == 1:
+            huffman[ord(str(key))] = huffman[key]
+            del huffman[key]
     print json.dumps(huffman, indent=4, separators=(',',': ')) # for pretty JSON output
 main()
