@@ -1,4 +1,4 @@
-# Lab2 CMC-CS181
+# Lab3 CMC-CS181
 ## March 5, 2016
 ## Kevin Cunanan
 
