@@ -1,12 +1,14 @@
 # Kevin Cunanan
 # username: kcunanan
-# Lab1
+# Lab3
 
 import operator
 import json
 from heapq import merge
 import math # log functions
 import sys # necessary to call read file
+import md5
+import os
 
 def huff(lst, acc, code):
     if len(lst) == 1:
@@ -17,7 +19,8 @@ def huff(lst, acc, code):
 
 def main():
     dict1 = {}
-    with open(str(sys.argv[1]), 'rb') as textFile:
+    input_file = sys.argv[1]
+    with open(input_file, 'rb') as textFile:
         for line in textFile:
             chars = list(line)
             for val in chars:
@@ -25,22 +28,21 @@ def main():
                     dict1[val] += 1
                 else:
                     dict1[val] = 1
-    for key, value in dict1.iteritems(): #iterate through items in dict1
-        if len(key) == 1: # if not it's a non-printable we've gone thru
-            if ord(key) < 32 or ord(key) >= 127:
-                dict1[str(hex(ord(key)))] = dict1[key]
-                del dict1[key]
+    # for key, value in dict1.iteritems(): #iterate through items in dict1
+    #     if len(key) == 1: # if not it's a non-printable we've gone thru
+    #         if ord(key) < 32 or ord(key) >= 127:
+    #             dict1[str(hex(ord(key)))] = dict1[key]
+    #             del dict1[key]
     lst = dict1.items()
     lst = sorted(lst, key=lambda y:y[1])
-    print lst
     while len(lst) > 1:
         z = lst[0]
         y = lst[1]
         v = z[1] + y[1]
         k = [z[0], y[0]]
-        lst = list(merge(lst[2:], [(k,v)]))
+        lst.append([k,v])
+        lst = sorted(lst[2:], key=lambda y:y[1])
     tree = lst[0][0]
-    print tree
     code = []
     huff(tree, "", code)
     huffman = dict(code)
@@ -48,5 +50,44 @@ def main():
         if len(str(key)) == 1:
             huffman[ord(str(key))] = huffman[key]
             del huffman[key]
+    # 2,1
+    f = open(input_file ,"rb")
+    butts = ""
+    cats = f.read(1)
     print json.dumps(huffman, indent=4, separators=(',',': ')) # for pretty JSON output
+    print cats
+    while cats != "":
+        print cats
+        if ord(str(cats)) < 32:
+            cats = ord(str(cats))
+            butts += huffman[cats]
+        else:
+            butts += huffman[ord(str(cats))]
+        cats = f.read(1)
+    if len(butts)%8 != 0:
+        remainder = len(butts) % 8
+        for i in range(0, remainder):
+            butts += "0"
+    print butts
+    print len(butts)%8
+    # 2.3
+    deets = {}
+    deets['size'] = os.path.getsize(input_file)
+    g = open(input_file ,"rb")
+    feed = g.read(4096)
+    m = md5.new()
+    while feed != "":
+        m.update(feed)
+        feed = g.read(4096)
+    deets['hash'] = m.hexdigest()
+    print deets['hash']
+    w = open('huffpressed.txt', "wb")
+    w.write(json.dumps(deets, indent=4, separators=(',',': ')))
+    w.write(json.dumps(huffman, indent=4, separators=(',',': ')))
+    loops = list(butts)
+    count = 0
+    while len(loops) > 0:
+        w.write(''.join(loops[count:count+8]))
+        count += 8
+        loops = loops[count:]
 main()
