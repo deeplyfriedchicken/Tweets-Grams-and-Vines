@@ -4,6 +4,7 @@
 
 import operator
 import json
+import struct
 from heapq import merge
 import math # log functions
 import sys # necessary to call read file
@@ -82,12 +83,21 @@ def main():
     deets['hash'] = m.hexdigest()
     print deets['hash']
     w = open('huffpressed.txt', "wb")
-    w.write(json.dumps(deets, indent=4, separators=(',',': ')))
-    w.write(json.dumps(huffman, indent=4, separators=(',',': ')))
+    w.write(json.dumps(deets))
+    w.write("\n")
+    w.write(json.dumps(huffman))
+    w.write("\n")
     loops = list(butts)
     count = 0
-    while len(loops) > 0:
-        w.write(''.join(loops[count:count+8]))
+    integer = str(''.join(loops[count:count+8]))
+    while integer != "":
+        print integer
+        print count
+        new = int(integer,2)
+        w.write(str(new))
+        w.write("\n")
+        print new
         count += 8
         loops = loops[count:]
+        integer = str(''.join(loops[count:count+8]))
 main()
