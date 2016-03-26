@@ -94,8 +94,7 @@ def main():
         print integer
         print count
         new = int(integer,2)
-        w.write(str(new))
-        w.write("\n")
+        w.write(struct.pack("B",new))
         print new
         count += 8
         loops = loops[count:]
