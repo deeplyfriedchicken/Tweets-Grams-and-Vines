@@ -6,12 +6,12 @@ import operator
 import json
 import struct
 from heapq import merge
-import math # log functions
 import sys # necessary to call read file
 import md5
 import os
 
-def huff(lst, acc, code):
+#1.3
+def huff(lst, acc, code): # uses a binary tree to assign codes to keys
     if len(lst) == 1:
         code.append((lst, acc))
     else:
@@ -19,8 +19,13 @@ def huff(lst, acc, code):
         right = huff(lst[1], acc + "1", code)
 
 def main():
+    #1.2
     dict1 = {}
     input_file = sys.argv[1]
+    idx = input_file.find(".")
+    huff_input = input_file[0:idx]
+    file_type = input_file[idx:]
+
     with open(input_file, 'rb') as textFile:
         for line in textFile:
             chars = list(line)
@@ -29,11 +34,6 @@ def main():
                     dict1[val] += 1
                 else:
                     dict1[val] = 1
-    # for key, value in dict1.iteritems(): #iterate through items in dict1
-    #     if len(key) == 1: # if not it's a non-printable we've gone thru
-    #         if ord(key) < 32 or ord(key) >= 127:
-    #             dict1[str(hex(ord(key)))] = dict1[key]
-    #             del dict1[key]
     lst = dict1.items()
     lst = sorted(lst, key=lambda y:y[1])
     while len(lst) > 1:
@@ -42,7 +42,7 @@ def main():
         v = z[1] + y[1]
         k = [z[0], y[0]]
         lst.append([k,v])
-        lst = sorted(lst[2:], key=lambda y:y[1])
+        lst = sorted(lst[2:], key=lambda y:y[1]) # sorts a balanced tree
     tree = lst[0][0]
     code = []
     huff(tree, "", code)
@@ -51,27 +51,26 @@ def main():
         if len(str(key)) == 1:
             huffman[ord(str(key))] = huffman[key]
             del huffman[key]
-    # 2,1
+    # 2.1
     f = open(input_file ,"rb")
-    butts = ""
-    cats = f.read(1)
-    print json.dumps(huffman, indent=4, separators=(',',': ')) # for pretty JSON output
-    print cats
+    butts = "" # string to hold binary data
+    cats = f.read(1) # reads a character in input file
     while cats != "":
-        print cats
         if ord(str(cats)) < 32:
             cats = ord(str(cats))
             butts += huffman[cats]
         else:
             butts += huffman[ord(str(cats))]
         cats = f.read(1)
-    if len(butts)%8 != 0:
+    if len(butts) % 8 != 0:
         remainder = len(butts) % 8
-        for i in range(0, remainder):
-            butts += "0"
-    print butts
-    print len(butts)%8
-    # 2.3
+        for i in range(0, 8-remainder):
+            butts = butts + "0"
+    if len(butts) % 8 == 0:
+        print "Binary String OK"
+    else:
+        raise ValueError("Binary String is not a multiple of 8")
+    # 2.2
     deets = {}
     deets['size'] = os.path.getsize(input_file)
     g = open(input_file ,"rb")
@@ -81,22 +80,29 @@ def main():
         m.update(feed)
         feed = g.read(4096)
     deets['hash'] = m.hexdigest()
-    print deets['hash']
-    w = open('huffpressed.txt', "wb")
+    deets['type'] = file_type
+    deets['name'] = huff_input
+    # print deets['hash']
+    w = open(huff_input + '.huf', "wb")
     w.write(json.dumps(deets))
     w.write("\n")
     w.write(json.dumps(huffman))
     w.write("\n")
     loops = list(butts)
-    count = 0
-    integer = str(''.join(loops[count:count+8]))
+    tot = float(len(butts))
+    integer = str(''.join(loops[0:8]))
+    print "Compressing..."
     while integer != "":
-        print integer
-        print count
+        progress = round(100 - 100*(float(len(loops))/tot), 2) # Progress bar
+        sys.stdout.write("\r"+ str(progress) + "% completed" )
+        sys.stdout.flush()
         new = int(integer,2)
         w.write(struct.pack("B",new))
-        print new
-        count += 8
-        loops = loops[count:]
-        integer = str(''.join(loops[count:count+8]))
+        loops = loops[8:]
+        integer = str(''.join(loops[0:8]))
+    print ""
+    print input_file + " compression complete."
+    size = float(os.path.getsize(huff_input + '.huf'))
+    ratio = float(deets['size'])/size
+    print "Compression Ratio: " + str(ratio)
 main()
