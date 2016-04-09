@@ -10,7 +10,7 @@ def main():
     # print header['hash']
     # print header['size']
     # print header['type']
-    print header['name']
+    # print header['name']
 
     huffman_old = json.loads(input_file.readline())
 
@@ -39,7 +39,8 @@ def main():
     m = md5.new(decoded_data)
     checksum = m.hexdigest()
     if checksum == header['hash']:
-        w = open(header['name']+"-decode"+header['type'], "wb")
+        # w = open(header['name']+"-decode"+header['type'], "wb")
+        w = open('decoded.txt', 'wb')
         w.write(decoded_data)
         w.close
         print ""
