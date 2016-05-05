@@ -47,11 +47,36 @@ def main():
 	q = args.quantize
 	w = open(args.output_file, 'wb')
 
+	header = {'version': "CMiCv1", 'height': height, 'width': width, 'wavelet': wavelet, 'q': q}
+
+	if height % 2 == 1:
+		height += 1
+		header['height_bool'] = True
+		row_n = [[0] * header['width']]
+		header['height_new'] = height
+		print len(row_n)
+		im = np.append(im, row_n, 0)
+	else:
+		header['height_bool'] = False
+	if width % 2 == 1:
+		width += 1
+		header['width_bool'] = True
+		header['width_new'] = width
+		column_n = [[0]] * height # okay since height would change first
+		im = np.hstack((im, column_n))
+	else:
+		header['width_bool'] = False
+
+	print im
+	print len(im)
+	show(im)
+
 
 	LL, (LH, HL, HH) = pywt.dwt2(im, wavelet, mode='periodization')
 
 	'''the following block of code will let you look at the decomposed image. Uncomment it if you'd like
 	'''
+
 	dwt = np.zeros((height, width))
 	dwt[0:height/2, 0:width/2] = LL
 	dwt[height/2:,0:width/2] = HL
@@ -79,9 +104,6 @@ def main():
 	print len(huff_arr)
 	print huff_arr[0]
 	print type(huff_arr[0])
-
-
-	header = {'version': "CMiCv1", 'height': height, 'width': width, 'wavelet': wavelet, 'q': q}
 
 	#stats
 	dict1 = {}

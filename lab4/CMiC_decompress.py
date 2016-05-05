@@ -39,9 +39,16 @@ def main():
 
 	header = json.loads(input_file.readline())
 	code_dict = json.loads(input_file.readline())
-	print header
-	height = int(header['height'])
-	width = int(header['width'])
+
+	if (header['height_bool'] == True):
+		height = int(header['height_new'])
+	else:
+		height = int(header['height'])
+	if (header['width_bool'] == True):
+		width = int(header['width_new'])
+	else:
+		width = int(header['width'])
+
 	wavelet = header['wavelet']
 	q = int(header['q'])
 	decode_dict = {v.encode() : k for k, v in code_dict.iteritems()}
@@ -71,7 +78,17 @@ def main():
 	HH = (np.array(decdoed_data[3*int(height/2 * width/2):4*int(height/2 * width/2)])*q).reshape(height/2, width/2)
 
 	im = pywt.idwt2( (LL, (LH, HL, HH)), wavelet,mode='periodization' )
+
+	if header['height_bool'] == True:
+		im = np.delete(im, header['height'], 0)
+	if header['width_bool'] == True:
+		im = np.delete(im, header['width'], axis=1)
+
+	print im
 	show(im)
+	(height, width) = im.shape
+	print height
+	print width
 	scipy.misc.toimage(im).save(output_file)
 if __name__ == '__main__':
 	main()
